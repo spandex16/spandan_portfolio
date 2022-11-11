@@ -8,13 +8,6 @@ Details for Milestone are available on Canvas (left sidebar, Course Project) or 
 
 With our analytics project, we first want to clean up all the data present in the database. From there, to understand more about the sale trends of video games in the past. We would like to know what factors could have affected a game's sales performance. Or if there is any relationship between the sales and the different characteristics of a game such as a platform it is released on, its genre, etc. Our interest in the topic arose from Brian and Spandan’s investment in video games. From present video games to the old school classics on pre-PC platforms, this topic is nostalgic for us. We want to explore and see how different variables are associated with the number of sales of a game. Suppose any continuous trends persist in the sale data, how does it change over time? If there are changes in the directions, we hope to identify it and visualize it.
 
-We are fairly confidant that we can build a user-facing Dashboard with this dataset.
-
-> Could you imagine building a user-facing Dashboard with this dataset?
-      Note: In the final weeks of the course you will be building a Dashboard with your data so choose wisely
-      - I think so
-      https://www.datapine.com/blog/data-dashboards-definition-examples-templates/
->
 
 ## Describe your dataset in about 150-200 words
 
