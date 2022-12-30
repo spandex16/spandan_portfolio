@@ -1,0 +1,255 @@
+---
+title: "Assignment_6_421"
+author: "Spandan Biswas"
+date: "23/03/2022"
+output: word_document
+---
+
+```{r}
+library(igraph)
+library(assortnet)
+options(digits=3)
+nodes <- read.csv("lawyers.csv", header=T)
+advice = matrix(scan("Advice.txt"),ncol=71,nrow=71,byrow=T)
+cowork = matrix(scan("Cowork.txt"),ncol=71,nrow=71,byrow=T)
+friend = matrix(scan("Friend.txt"),ncol=71,nrow=71,byrow=T)
+
+
+```
+
+```{r}
+graph_advice <- graph_from_adjacency_matrix(advice, mode = "directed")
+graph_cowork <- graph_from_adjacency_matrix(cowork, mode = "directed")
+graph_friend <- graph_from_adjacency_matrix(friend, mode = "directed")
+
+```
+
+```{r}
+A2 <- advice %*% advice
+C2 <- cowork %*% cowork
+F2 <- friend %*% friend
+
+ma <- sum(advice)
+mc <- sum(cowork)
+mf <- sum(friend)
+
+ma
+mc
+mf
+
+```
+
+```{r}
+trA <- sum(diag(A2))
+trC <- sum(diag(C2))
+trF <- sum(diag(F2))
+
+trA
+trC
+trF
+
+
+```
+
+```{r}
+ra <- trA / ma
+rc <- trC / mc
+rf <- trF / mf
+
+ra
+rc
+rf
+
+
+```
+
+```{r}
+reciprocity(graph_advice)
+reciprocity(graph_cowork)
+reciprocity(graph_friend)
+
+
+```
+
+```{r}
+graph_advice_un <- as.undirected(graph_advice, mode="collapse")
+graph_cowork_un <- as.undirected(graph_cowork, mode="collapse")
+graph_friend_un <- as.undirected(graph_friend, mode="collapse")
+
+
+```
+
+```{r}
+
+## Calculating Q for Status
+
+n=71
+adj_advice <- get.adjacency(graph_advice_un)
+twoM <- sum(adj_advice)
+k_advice <- degree(graph_advice_un)
+k2 <- k_advice %*% t(k_advice)
+temp <- k2/twoM
+temp2 <- adj_advice - temp
+del.status <- matrix(0,ncol=71,nrow=71)  
+for (i in 1:n) {
+  for (j in 1:n) {
+    if (nodes$Status[i] == nodes$Status[j]) del.status[i,j] = 1
+  }}
+sum(temp2 * del.status)/twoM
+modularity(graph_advice_un,nodes$Status)
+
+
+adj_cowork <- get.adjacency(graph_cowork_un)
+twoM_c <- sum(adj_cowork)
+k_cowork <- degree(graph_cowork_un)
+k2_c <- k_cowork %*% t(k_cowork)
+temp3 <- k2_c/twoM_c
+temp4 <- adj_cowork - temp3
+sum(temp4 * del.status)/twoM_c
+modularity(graph_cowork_un,nodes$Status)
+
+
+adj_friend <- get.adjacency(graph_friend_un)
+twoM_f <- sum(adj_friend)
+k_friend <- degree(graph_friend_un)
+k2_f <- k_friend %*% t(k_friend)
+temp5 <- k2_f/twoM_f
+temp6 <- adj_friend - temp5
+sum(temp6 * del.status)/twoM_f
+modularity(graph_friend_un,nodes$Status)
+
+
+```
+```{r}
+## Calculating Q Max for status
+
+Qmax_a = (twoM - sum(temp*del.status))/twoM
+Qmax_a
+Qmax_C = (twoM_c - sum(temp3*del.status))/twoM_c
+Qmax_C
+Qmax_f = (twoM_f-sum(temp5*del.status))/twoM_f
+Qmax_f
+
+
+
+
+
+```
+
+```{r}
+## Calculating Q Law School
+
+del.laws <- matrix(0,ncol=71,nrow=71)  
+for (i in 1:n) {
+  for (j in 1:n) {
+    if (nodes$LawSchool[i] == nodes$LawSchool[j]) del.laws[i,j] = 1
+  }}
+
+adj_advice <- get.adjacency(graph_advice_un)
+twoM <- sum(adj_advice)
+k_advice <- degree(graph_advice_un)
+k2 <- k_advice %*% t(k_advice)
+temp <- k2/twoM
+temp2 <- adj_advice - temp
+sum(temp2 * del.laws)/twoM
+modularity(graph_advice_un,nodes$LawSchool)
+
+
+adj_cowork <- get.adjacency(graph_cowork_un)
+twoM_c <- sum(adj_cowork)
+k_cowork <- degree(graph_cowork_un)
+k2_c <- k_cowork %*% t(k_cowork)
+temp3 <- k2_c/twoM_c
+temp4 <- adj_cowork - temp3
+sum(temp4 * del.laws)/twoM_c
+modularity(graph_cowork_un,nodes$LawSchool)
+
+
+adj_friend <- get.adjacency(graph_friend_un)
+twoM_f <- sum(adj_friend)
+k_friend <- degree(graph_friend_un)
+k2_f <- k_friend %*% t(k_friend)
+temp5 <- k2_f/twoM_f
+temp6 <- adj_friend - temp5
+sum(temp6 * del.laws)/twoM_f
+modularity(graph_friend_un,nodes$LawSchool)
+
+
+```
+
+```{r}
+## Calculating Q Max for Law School
+
+Qmax_a = (twoM - sum(temp*del.laws))/twoM
+Qmax_a
+Qmax_C = (twoM_c - sum(temp3*del.laws))/twoM_c
+Qmax_C
+Qmax_f = (twoM_f-sum(temp5*del.laws))/twoM_f
+Qmax_f
+
+```
+
+```{r}
+
+
+
+```
+
+```{r}
+
+
+
+```
+
+```{r}
+
+
+
+```
+
+```{r}
+assortativity.nominal(graph_advice_un,nodes$Status)
+assortativity.nominal(graph_cowork_un,nodes$Status)
+assortativity.nominal(graph_friend_un,nodes$Status)
+
+
+
+```
+
+
+```{r}
+assortment.discrete(advice, types = as.factor(nodes$Status), weighted = TRUE)
+assortment.discrete(cowork, types = as.factor(nodes$Status), weighted = TRUE)
+assortment.discrete(friend, types = as.factor(nodes$Status), weighted = TRUE)
+
+assortment.discrete(advice, types = as.factor(nodes$LawSchool), weighted = TRUE)
+assortment.discrete(cowork, types = as.factor(nodes$LawSchool), weighted = TRUE)
+assortment.discrete(friend, types = as.factor(nodes$LawSchool), weighted = TRUE)
+
+
+
+```
+
+
+
+
+
+```{r}
+
+
+
+```
+
+
+```{r}
+
+
+
+```
+
+
+```{r}
+
+
+
+```
