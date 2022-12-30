@@ -1,0 +1,113 @@
+---
+title: "421_final"
+author: "Spandan Biswas"
+date: "25/04/2022"
+output: word_document
+---
+
+```{r}
+library(igraph)
+options(digits = 3, scientific = F, scipen = 100)
+
+
+```
+
+```{r}
+nodes <- read.csv("TrainBombNodes.csv", header=T)
+edges <- read.csv("TrainBombEdges.csv", header = T)
+
+
+```
+
+```{r}
+graph1 <- graph_from_data_frame(edges,nodes,directed = TRUE)
+graph1
+
+adj_t = as.matrix(get.adjacency(graph1))
+```
+
+```{r}
+g_2 <- graph_from_adjacency_matrix(adj_t, mode = "undirected")
+
+V(g_2)$color <- "blue"
+V(g_2)$color[c(1,3,6,28,30,31,36,37,41,43,51)] <- "red"
+
+
+```
+
+```{r}
+plot(g_2,layout=layout.fruchterman.reingold,
+vertex.size=5, vertex.label.cex=.15,edge.arrow.size=.15,
+ vertex.label=NA)
+
+
+```
+
+```{r}
+eigen.cent <- eigen_centrality(g_2)
+eigen.node <- eigen.cent$vector
+order <- order(eigen.cent$vector, decreasing = 1)
+eigen.node[order]
+
+```
+
+```{r}
+betweenness <- betweenness(g_2)
+nodes$between <-betweenness
+closeness <- closeness(g_2)
+nodes$close <- closeness
+
+
+```
+
+```{r}
+table(sapply(cliques(g_2),length))
+cliques(g_2) [sapply(cliques(g_2), length) == 11]
+
+```
+
+```{r}
+graph1 <- as.undirected(graph1, mode="collapse")
+wc <- walktrap.community(graph1)
+modularity(wc)
+membership(wc)
+nodes$community <- membership(wc)
+
+```
+
+```{r}
+plot(wc,graph1,layout=layout.fruchterman.reingold,
+vertex.size=5, vertex.label.cex=.15,edge.arrow.size=.15,
+ vertex.label=NA)
+
+
+```
+
+```{r}
+sapply(nodes,table)$community
+
+```
+
+```{r}
+table(nodes$Role,nodes$community)
+
+
+```
+
+```{r}
+
+
+
+```
+
+```{r}
+
+
+
+```
+
+```{r}
+
+
+
+```
