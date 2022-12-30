@@ -1,0 +1,106 @@
+---
+title: "Bonus_421"
+author: "Spandan Biswas"
+date: "06/04/2022"
+output: word_document
+---
+
+```{r}
+library(igraph)
+options(digits = 3, scientific = F, scipen = 100)
+
+
+
+```
+
+```{r}
+nodes <- read.csv("vertex911.csv",header=T)
+adj <- read.csv("adj911.csv",header=T)
+adj <- as.matrix(adj)
+
+
+
+```
+
+```{r}
+g_2 <- graph_from_adjacency_matrix(adj, mode = "undirected")
+
+
+
+```
+
+```{r}
+V(g_2)$color <- "blue"
+V(g_2)$color[1:19] <- "red"
+
+
+
+```
+
+```{r}
+plot(g_2,layout=layout.fruchterman.reingold,
+vertex.size=5, vertex.label.cex=.15,edge.arrow.size=.15,
+ vertex.label=NA)
+
+#the hijackers in the network are quite central and very well connected in the network. There are 2 small disconnected components. There is 1 giant component and it contains the hijackers. The hijackers are very well connected to each other
+
+```
+
+```{r}
+eigen.cent <- eigen_centrality(g_2)
+eigen.node <- eigen.cent$vector
+order <- order(eigen.cent$vector, decreasing = 1)
+eigen.node[order]
+# from the the list 1:4 are the actual hijackers.
+```
+
+```{r}
+betweenness <- betweenness(g_2)
+nodes$between <-betweenness
+closeness <- closeness(g_2)
+nodes$close <- closeness
+
+# check the nodes and click the sort to check the the top 5 to determine the the values.
+
+
+```
+
+```{r}
+table(sapply(cliques(g_2),length))
+cliques(g_2) [sapply(cliques(g_2), length) == 6]
+
+
+
+```
+
+```{r}
+g_3 <- graph_from_adjacency_matrix(adj[1:19,1:19], mode = "undirected")
+
+
+
+```
+
+```{r}
+V(g_3)$color[1:5] <- "green"
+V(g_3)$color[6:10] <- "blue"
+V(g_3)$color[11:15] <- "gray0"
+V(g_3)$color[16:19] <- "yellow"
+V(g_3)$color[c(1,6,11,16)] <- "red"
+
+
+##repeat for all the other values in the file. The vector is just to show the matching the codes. Adter all of this plot.
+
+```
+
+```{r}
+plot(g_3,layout=layout.fruchterman.reingold,
+vertex.size=5, vertex.label.cex=.15,edge.arrow.size=.15,
+ vertex.label=NA)
+
+```
+
+```{r}
+table(sapply(cliques(g_3),length))
+cliques(g_3) [sapply(cliques(g_3), length) == 6]
+
+```
