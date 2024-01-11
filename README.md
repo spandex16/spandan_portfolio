@@ -2,7 +2,7 @@
 
 ### :man_technologist: About Me :
 
-I recently graduated with a degree in BSc Economics with a Data Science minor from University of British Columbia
+I graduated with a degree in BSc Economics with a Data Science minor from University of British Columbia. I am currently pursuing a Master of Data Science at the University of Calgary.
 
 - :telescope: I'm currently looking for job in the field of Data Science
 
